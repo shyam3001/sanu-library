@@ -104,14 +104,19 @@ public class Library {
     // Save books to file
     private void saveBooks() {
         try (PrintWriter pw = new PrintWriter(new FileWriter(dataFile))) {
+            pw.println("title,familyNameOne,firstNameOne,nationalityOne,birthYearOne,familyNameTwo,firstNameTwo,nationalityTwo,birthYearTwo,familyNameThree,firstNameThree,nationalityThree,birthYearThree,year,isbn,ebook,edition");
+            
             for (int i = 0; i < bookCount; i++) {
                 Book book = books[i];
-                pw.print(book.title + "|" + book.isbn + "|" + book.isEbook + "|" + book.yearPublished);
+                pw.print(book.title);
+
                 for (int j = 0; j < book.authors.length; j++) {
                     if (book.authors[j] != null) {
-                        pw.print("|" + book.authors[j].name + "|" + book.authors[j].nationality + "|" + book.authors[j].birthYear);
+                        pw.print("," + book.authors[j].familyName + "," + book.authors[j].firstName + "," + book.authors[j].nationality + "," + book.authors[j].birthYear);
                     }
                 }
+
+                pw.print(book.yearPublished + "," + book.isbn + "," + book.isEbook + "," + book.edition);
                 pw.println();
             }
         } catch (IOException e) {
