@@ -73,24 +73,28 @@ public class Library {
     private void loadBooks() {
         try (BufferedReader br = new BufferedReader(new FileReader(dataFile))) {
             String line;
+            br.readLine(); // skip first line
             while ((line = br.readLine()) != null) {
-                // Example of line format: Title|ISBN|eBook|Year|AuthorName|Nationality|BirthYear|...
-                String[] parts = line.split("\\|");
+                String[] parts = line.split(",");
                 String title = parts[0];
-                String isbn = parts[1];
-                boolean isEbook = Boolean.parseBoolean(parts[2]);
-                int yearPublished = Integer.parseInt(parts[3]);
-
+                
                 Author[] authors = new Author[3]; // Up to 3 authors
                 int authorIndex = 0;
-                for (int i = 4; i < parts.length; i += 3) {
-                    String authorName = parts[i];
-                    String nationality = parts[i + 1];
-                    int birthYear = Integer.parseInt(parts[i + 2]);
-                    authors[authorIndex++] = new Author(authorName, nationality, birthYear);
+
+                for (int i = 4; i < parts.length; i += 4) {
+                    String authorFamilyName = parts[i];
+                    String authorFirstName = parts[i + 1];
+                    String nationality = parts[i + 2];
+                    int birthYear = Integer.parseInt(parts[i + 3]);
+                    authors[authorIndex++] = new Author(authorFamilyName, authorFirstName, nationality, birthYear);
                 }
 
-                books[bookCount++] = new Book(title, isbn, isEbook, yearPublished, authors);
+                int yearPublished = Integer.parseInt(parts[13]);
+                String isbn = parts[14];
+                boolean isEbook = Boolean.parseBoolean(parts[15]);
+                int edition = Integer.parseInt(parts[16]);
+
+                books[bookCount++] = new Book(title, isbn, isEbook, yearPublished, edition, authors);
             }
         } catch (IOException e) {
             System.out.println("Error loading books.");
