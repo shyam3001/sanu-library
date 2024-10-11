@@ -5,9 +5,9 @@ class Author {
     String familyName;
     String firstName;
     String nationality;
-    int birthYear;
+    String birthYear;
 
-    public Author(String familyName, String firstName, String nationality, int birthYear) {
+    public Author(String familyName, String firstName, String nationality, String birthYear) {
         this.familyName = familyName;
         this.firstName = firstName;
         this.nationality = nationality;
@@ -81,11 +81,11 @@ public class Library {
                 Author[] authors = new Author[3]; // Up to 3 authors
                 int authorIndex = 0;
 
-                for (int i = 4; i < parts.length; i += 4) {
+                for (int i = 1; i <= 9; i += 4) {
                     String authorFamilyName = parts[i];
                     String authorFirstName = parts[i + 1];
                     String nationality = parts[i + 2];
-                    int birthYear = Integer.parseInt(parts[i + 3]);
+                    String birthYear = parts[i + 3];
                     authors[authorIndex++] = new Author(authorFamilyName, authorFirstName, nationality, birthYear);
                 }
 
@@ -117,7 +117,7 @@ public class Library {
                     }
                 }
 
-                pw.print(book.yearPublished + "," + book.isbn + "," + book.isEbook + "," + book.edition);
+                pw.print("," + book.yearPublished + "," + book.isbn + "," + book.isEbook + "," + book.edition);
                 pw.println();
             }
         } catch (IOException e) {
@@ -201,7 +201,7 @@ public class Library {
                 String nationality = br.readLine();
 
                 System.out.print("Enter author's birth year: ");
-                int birthYear = Integer.parseInt(br.readLine());
+                String birthYear = br.readLine();
 
                 authors[i] = new Author(familyName, firstName, nationality, birthYear);
             }
