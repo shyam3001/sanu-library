@@ -115,6 +115,9 @@ public class Library {
                     if (book.authors[j] != null) {
                         pw.print("," + book.authors[j].familyName + "," + book.authors[j].firstName + "," + book.authors[j].nationality + "," + book.authors[j].birthYear);
                     }
+                    else {
+                        pw.print(",,,,");
+                    }
                 }
 
                 pw.print("," + book.yearPublished + "," + book.isbn + "," + book.isEbook + "," + book.edition);
