@@ -63,7 +63,7 @@ class Book {
 public class Library {
     private Book[] books = new Book[100]; // Maximum of 100 books
     private int bookCount = 0;
-    private final String dataFile = "books.txt";
+    private final String dataFile = "LibraryData.csv";
 
     public Library() {
         loadBooks();
@@ -97,6 +97,7 @@ public class Library {
                 books[bookCount++] = new Book(title, isbn, isEbook, yearPublished, edition, authors);
             }
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("Error loading books.");
         }
     }
