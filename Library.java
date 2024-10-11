@@ -156,7 +156,10 @@ public class Library {
     public void viewBooksByAuthor(String authorName) {
         for (int i = 0; i < bookCount; i++) {
             for (int j = 0; j < books[i].authors.length; j++) {
-                if (books[i].authors[j] != null && books[i].authors[j].name.equalsIgnoreCase(authorName)) {
+                if (books[i].authors[j] != null && 
+                    (books[i].authors[j].familyName.equalsIgnoreCase(authorName) 
+                    || books[i].authors[j].firstName.equalsIgnoreCase(authorName))) {
+                        
                     System.out.println(books[i]);
                     System.out.println("-----------------------------------");
                 }
