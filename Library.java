@@ -2,19 +2,21 @@ import java.io.*;
 
 // Author class definition
 class Author {
-    String name;
+    String familyName;
+    String firstName;
     String nationality;
     int birthYear;
 
-    public Author(String name, String nationality, int birthYear) {
-        this.name = name;
+    public Author(String familyName, String firstName, String nationality, int birthYear) {
+        this.familyName = familyName;
+        this.firstName = firstName;
         this.nationality = nationality;
         this.birthYear = birthYear;
     }
 
     @Override
     public String toString() {
-        return name + " (" + nationality + ", " + birthYear + ")";
+        return firstName + " " + familyName + " (" + nationality + ", " + birthYear + ")";
     }
 }
 
