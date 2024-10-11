@@ -26,13 +26,15 @@ class Book {
     String isbn;
     boolean isEbook;
     int yearPublished;
+    int edition;
     Author[] authors;
 
-    public Book(String title, String isbn, boolean isEbook, int yearPublished, Author[] authors) {
+    public Book(String title, String isbn, boolean isEbook, int yearPublished, int edition, Author[] authors) {
         this.title = title;
         this.isbn = isbn;
         this.isEbook = isEbook;
         this.yearPublished = yearPublished;
+        this.edition = edition;
         this.authors = authors;
     }
 
@@ -42,6 +44,7 @@ class Book {
                         "ISBN: " + isbn + "\n" +
                         "eBook: " + (isEbook ? "Yes" : "No") + "\n" +
                         "Year Published: " + yearPublished + "\n" +
+                        "Edition: " + edition + "\n" +
                         "Authors: ";
 
         for (int i = 0; i < authors.length; i++) {
