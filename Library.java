@@ -159,7 +159,7 @@ public class Library {
                 if (books[i].authors[j] != null && 
                     (books[i].authors[j].familyName.equalsIgnoreCase(authorName) 
                     || books[i].authors[j].firstName.equalsIgnoreCase(authorName))) {
-                        
+
                     System.out.println(books[i]);
                     System.out.println("-----------------------------------");
                 }
@@ -182,13 +182,19 @@ public class Library {
             System.out.print("Enter year published: ");
             int yearPublished = Integer.parseInt(br.readLine());
 
+            System.out.print("Enter edition: ");
+            int edition = Integer.parseInt(br.readLine());
+
             Author[] authors = new Author[3];
             for (int i = 0; i < 3; i++) {
-                System.out.print("Enter author's name (or press enter to skip): ");
-                String name = br.readLine();
-                if (name.isEmpty()) {
+                System.out.print("Enter author's family name (or press enter to skip): ");
+                String familyName = br.readLine();
+                if (familyName.isEmpty()) {
                     break;
                 }
+
+                System.out.print("Enter author's first name: ");
+                String firstName = br.readLine();
 
                 System.out.print("Enter author's nationality: ");
                 String nationality = br.readLine();
@@ -196,10 +202,10 @@ public class Library {
                 System.out.print("Enter author's birth year: ");
                 int birthYear = Integer.parseInt(br.readLine());
 
-                authors[i] = new Author(name, nationality, birthYear);
+                authors[i] = new Author(familyName, firstName, nationality, birthYear);
             }
 
-            books[bookCount++] = new Book(title, isbn, isEbook, yearPublished, authors);
+            books[bookCount++] = new Book(title, isbn, isEbook, yearPublished, edition, authors);
             saveBooks();
             System.out.println("Book added successfully.");
         } catch (IOException e) {
