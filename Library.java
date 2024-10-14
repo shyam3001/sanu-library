@@ -65,19 +65,23 @@ public class Library {
     private int bookCount = 0;
     private final String dataFile = "LibraryData.csv";
 
+    // Single BufferedReader instance for the entire program
+    private BufferedReader br;
+
     public Library() {
+        this.br = new BufferedReader(new InputStreamReader(System.in)); // Initialize once
         loadBooks();
     }
 
     // Load books from file
     private void loadBooks() {
-        try (BufferedReader br = new BufferedReader(new FileReader(dataFile))) {
+        try (BufferedReader fileReader = new BufferedReader(new FileReader(dataFile))) {
             String line;
-            br.readLine(); // skip first line
-            while ((line = br.readLine()) != null) {
+            fileReader.readLine(); // skip first line
+            while ((line = fileReader.readLine()) != null) {
                 String[] parts = line.split(",");
                 String title = parts[0];
-                
+
                 Author[] authors = new Author[3]; // Up to 3 authors
                 int authorIndex = 0;
 
@@ -86,7 +90,9 @@ public class Library {
                     String authorFirstName = parts[i + 1];
                     String nationality = parts[i + 2];
                     String birthYear = parts[i + 3];
-                    authors[authorIndex++] = new Author(authorFamilyName, authorFirstName, nationality, birthYear);
+                    if (!authorFamilyName.isEmpty()) {
+                        authors[authorIndex++] = new Author(authorFamilyName, authorFirstName, nationality, birthYear);
+                    }
                 }
 
                 int yearPublished = Integer.parseInt(parts[13]);
@@ -114,8 +120,7 @@ public class Library {
                 for (int j = 0; j < book.authors.length; j++) {
                     if (book.authors[j] != null) {
                         pw.print("," + book.authors[j].familyName + "," + book.authors[j].firstName + "," + book.authors[j].nationality + "," + book.authors[j].birthYear);
-                    }
-                    else {
+                    } else {
                         pw.print(",,,,");
                     }
                 }
@@ -173,7 +178,7 @@ public class Library {
 
     // Add a new book
     public void addBook() {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+        try {
             System.out.print("Enter book title: ");
             String title = br.readLine();
 
@@ -189,11 +194,11 @@ public class Library {
             System.out.print("Enter edition: ");
             int edition = Integer.parseInt(br.readLine());
 
-            Author[] authors = new Author[3];
-            for (int i = 0; i < 3; i++) {
+            Author[] authors = new Author[3];  // Allowing up to 3 authors
+            for (int i = 0; i < authors.length; i++) {
                 System.out.print("Enter author's family name (or press enter to skip): ");
                 String familyName = br.readLine();
-                if (familyName.isEmpty()) {
+                if (familyName.isEmpty()) {  // Stop if no more authors are provided
                     break;
                 }
 
@@ -219,7 +224,7 @@ public class Library {
 
     // Edit a book (by ISBN)
     public void editBook() {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+        try {
             System.out.print("Enter ISBN of book to edit: ");
             String isbn = br.readLine();
 
@@ -228,21 +233,27 @@ public class Library {
                     System.out.println("Editing book: " + books[i]);
 
                     System.out.print("Enter new title (or press enter to keep current): ");
-                    String newTitle = br.readLine();
-                    if (!newTitle.isEmpty()) {
-                        books[i].title = newTitle;
+                    String titleInput = br.readLine();
+                    if (!titleInput.isEmpty()) {
+                        books[i].title = titleInput;
                     }
 
-                    System.out.print("Is this an eBook? (true/false, or press enter to keep current): ");
-                    String isEbookInput = br.readLine();
-                    if (!isEbookInput.isEmpty()) {
-                        books[i].isEbook = Boolean.parseBoolean(isEbookInput);
+                    System.out.print("Is this an eBook? (true/false or press enter to keep current): ");
+                    String ebookInput = br.readLine();
+                    if (!ebookInput.isEmpty()) {
+                        books[i].isEbook = Boolean.parseBoolean(ebookInput);
                     }
 
                     System.out.print("Enter new year published (or press enter to keep current): ");
                     String yearInput = br.readLine();
                     if (!yearInput.isEmpty()) {
                         books[i].yearPublished = Integer.parseInt(yearInput);
+                    }
+
+                    System.out.print("Enter new edition (or press enter to keep current): ");
+                    String editionInput = br.readLine();
+                    if (!editionInput.isEmpty()) {
+                        books[i].edition = Integer.parseInt(editionInput);
                     }
 
                     saveBooks();
@@ -252,18 +263,19 @@ public class Library {
             }
 
             System.out.println("Book with ISBN " + isbn + " not found.");
-        } catch (IOException e) {
-            System.out.println("Error while editing book.");
+        } catch (IOException | NumberFormatException e) {
+            System.out.println("Error while editing book: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    // Display menu and process user input
-    public void showMenu() {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+    // Main menu
+    public void displayMenu() {
+        try {
             while (true) {
-                System.out.println("************");
+                System.out.println("************************************");
                 System.out.println("Welcome to the Library");
-                System.out.println("************");
+                System.out.println("************************************");
                 System.out.println("1 > View all Books");
                 System.out.println("2 > View eBooks");
                 System.out.println("3 > View non-eBooks");
@@ -271,7 +283,7 @@ public class Library {
                 System.out.println("5 > Add Book");
                 System.out.println("6 > Edit Book");
                 System.out.println("7 > Exit");
-                System.out.println("************");
+                System.out.println("************************************");
                 System.out.print("Your choice: ");
                 int choice = Integer.parseInt(br.readLine());
 
@@ -286,7 +298,7 @@ public class Library {
                         viewNonEBooks();
                         break;
                     case 4:
-                        System.out.print("Enter Author Name: ");
+                        System.out.print("Enter Author name: ");
                         String authorName = br.readLine();
                         viewBooksByAuthor(authorName);
                         break;
@@ -297,19 +309,21 @@ public class Library {
                         editBook();
                         break;
                     case 7:
-                        System.out.println("Goodbye!");
+                        System.out.println("Goodbye");
                         return;
                     default:
-                        System.out.println("Invalid choice, please try again.");
+                        System.out.println("Invalid choice. Please try again.");
                 }
             }
-        } catch (IOException e) {
-            System.out.println("Error while displaying menu.");
+        } catch (IOException | NumberFormatException e) {
+            System.out.println("Error while displaying menu: " + e.getMessage());
+            e.printStackTrace(); // Print full stack trace for better debugging
         }
     }
 
+    // Main method to run the program
     public static void main(String[] args) {
         Library library = new Library();
-        library.showMenu();
+        library.displayMenu();
     }
 }
